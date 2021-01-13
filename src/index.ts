@@ -1,4 +1,4 @@
-import { SCALE_RATE, CANVAS_WIDTH, CANVAS_HEIGHT, FONT } from './constants';
+import { SCALE_RATE, CANVAS_WIDTH, CANVAS_HEIGHT, FONT } from "./constants";
 import {
     drawHorizontalMarkup,
     drawLine,
@@ -7,7 +7,9 @@ import {
     getScaledX,
     getScaledY,
     drawXSignature,
-} from './utils';
+} from "./utils";
+import { drawMap } from "./drawMap";
+import { ChartMap } from "./classMap";
 
 // const data: Data = {
 //     columns: [
@@ -23,12 +25,12 @@ import {
 const x = [110, 120, 130, 140, 150, 160];
 const y = [10, 60, 30, 300, 140, 200];
 
-const canvas = <HTMLCanvasElement>document.getElementById('chart');
+const canvas = <HTMLCanvasElement>document.getElementById("chart");
 
 canvas.width = CANVAS_WIDTH;
 canvas.height = CANVAS_HEIGHT;
 
-const context = canvas.getContext('2d');
+const context = canvas.getContext("2d");
 
 const scaledX = getScaledX(x, canvas.width);
 const scaledY = getScaledY(y, canvas.height);
@@ -37,10 +39,7 @@ if (context) {
     const draw = createVMDrawer(context, scaledX);
 
     context.scale(SCALE_RATE, SCALE_RATE);
-    context.translate(
-        ((1 - SCALE_RATE) * CANVAS_WIDTH) / 2,
-        ((1 - SCALE_RATE) * CANVAS_HEIGHT) / 2
-    );
+    context.translate(((1 - SCALE_RATE) * CANVAS_WIDTH) / 2, ((1 - SCALE_RATE) * CANVAS_HEIGHT) / 2);
     context.font = FONT;
 
     drawHorizontalMarkup(context, y, 5, canvas.height, canvas.width);
@@ -48,7 +47,12 @@ if (context) {
     drawLine(context, scaledX, scaledY);
     drawCircle(context, scaledX, scaledY);
 
-    canvas.addEventListener('mousemove', (e: MouseEvent) => {
+    new ChartMap();
+    // drawMap();
+    // window.addEventListener('load', () => {
+    // });
+
+    canvas.addEventListener("mousemove", (e: MouseEvent) => {
         // draw(e.offsetX);
     });
 

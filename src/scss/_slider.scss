@@ -1,0 +1,29 @@
+%edge {
+    width: var(--edge-width);
+    height: 100%;
+    background-color: burlywood;
+}
+
+.slider {
+    position: relative;
+    display: flex;
+    height: 100px;
+
+    .viewport {
+        position: absolute;
+        display: flex;
+        justify-content: space-between;
+        height: 100%;
+        background-color: violet;
+
+        &-left-edge {
+            @extend %edge;
+            cursor: w-resize;
+        }
+
+        &-right-edge {
+            @extend %edge;
+            cursor: e-resize;
+        }
+    }
+}
