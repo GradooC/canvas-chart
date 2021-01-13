@@ -1,47 +1,41 @@
 import './scss/index.scss';
 
 const EDGE_WIDTH = 4;
+const MIN_VIEWPORT_WIDTH = 100;
 
 type Dimensions = {
     fromLeft: number;
     fromRight: number;
-    sliderWidth: number;
 };
-
-const positionConstraints = [
-    (dim: Dimensions) => dim.fromLeft > 0,
-    (dim: Dimensions) => dim.fromRight > 0,
-];
 
 export class ChartMap {
     private slider: HTMLDivElement;
-    private left: HTMLDivElement;
     private viewport: HTMLDivElement;
+    private leftVPEdge: HTMLDivElement;
+    private rightVPEdge: HTMLDivElement;
+    private left: HTMLDivElement;
     private right: HTMLDivElement;
-    private sliderRect: DOMRect;
-    private viewportRect: DOMRect;
     private dimensions: Dimensions = {
         fromLeft: 100,
         fromRight: 600,
-        sliderWidth: 900,
     };
     constructor() {
         this.slider = document.querySelector('.slider') as HTMLDivElement;
-        this.left = document.querySelector('.viewport-left-edge') as HTMLDivElement;
         this.viewport = document.querySelector('.viewport') as HTMLDivElement;
-        this.right = document.querySelector('.viewport-left-edge') as HTMLDivElement;
-        this.sliderRect = this.slider.getBoundingClientRect();
-        this.viewportRect = this.viewport.getBoundingClientRect();
+        this.leftVPEdge = document.querySelector('.viewport-left-edge') as HTMLDivElement;
+        this.rightVPEdge = document.querySelector('.viewport-right-edge') as HTMLDivElement;
+        this.left = document.querySelector('.left') as HTMLDivElement;
+        this.right = document.querySelector('.right') as HTMLDivElement;
 
         this.setPosition();
         this.handleDrag();
-        this.handleResize();
+        this.handleLeftSideResize();
+        this.handleRightSideResize();
         this.setupCSSVars();
     }
 
     private handleDrag() {
         this.viewport.addEventListener('mousedown', (event) => {
-            event.preventDefault();
             let startX = event.pageX;
 
             const onMousemove = (e: MouseEvent) => {
@@ -55,15 +49,14 @@ export class ChartMap {
         });
     }
 
-    private handleResize() {
-        this.left.addEventListener('mousedown', (event) => {
-            event.preventDefault();
+    private handleLeftSideResize() {
+        this.leftVPEdge.addEventListener('mousedown', (event) => {
             event.stopPropagation();
             let startX = event.pageX;
 
             const onMousemove = (e: MouseEvent) => {
                 const delta = startX - e.pageX;
-                this.calculateResize(delta);
+                this.calculateLeftSideResize(delta);
                 this.setPosition();
 
                 startX = e.pageX;
@@ -73,42 +66,90 @@ export class ChartMap {
         });
     }
 
-    private setDimensions(dim: Partial<Dimensions>) {
+    private handleRightSideResize() {
+        this.rightVPEdge.addEventListener('mousedown', (event) => {
+            event.stopPropagation();
+            let startX = event.pageX;
+
+            const onMousemove = (e: MouseEvent) => {
+                const delta = startX - e.pageX;
+                this.calculateRightSideResize(delta);
+                this.setPosition();
+
+                startX = e.pageX;
+            };
+
+            this.addEventListeners(onMousemove);
+        });
+    }
+
+    private calculateDrag(delta: number) {
+        const sliderRect = this.slider.getBoundingClientRect();
+        const viewportRect = this.viewport.getBoundingClientRect();
+
+        let fromLeft = viewportRect.left - sliderRect.left - delta;
+        let fromRight = sliderRect.right - viewportRect.right + delta;
+        if (fromLeft < 0) {
+            fromLeft = 0;
+            fromRight = sliderRect.width - viewportRect.width;
+        }
+        if (fromRight < 0) {
+            fromRight = 0;
+            fromLeft = sliderRect.width - viewportRect.width;
+        }
+        this.setDimensions({ fromLeft, fromRight });
+    }
+
+    private calculateLeftSideResize(delta: number) {
+        const sliderRect = this.slider.getBoundingClientRect();
+        const viewportRect = this.viewport.getBoundingClientRect();
+
+        const maxFromLeft = sliderRect.width - this.dimensions.fromRight - MIN_VIEWPORT_WIDTH;
+        let fromLeft = viewportRect.left - sliderRect.left - delta;
+        if (fromLeft < 0) {
+            fromLeft = 0;
+        }
+        if (fromLeft > maxFromLeft) {
+            fromLeft = maxFromLeft;
+        }
+        this.setDimensions({ fromLeft });
+    }
+
+    private calculateRightSideResize(delta: number) {
+        const sliderRect = this.slider.getBoundingClientRect();
+        const viewportRect = this.viewport.getBoundingClientRect();
+
+        const maxFromRight = sliderRect.width - this.dimensions.fromLeft - MIN_VIEWPORT_WIDTH;
+        let fromRight = sliderRect.right - viewportRect.right + delta;
+        if (fromRight < 0) {
+            fromRight = 0;
+        }
+        if (fromRight > maxFromRight) {
+            fromRight = maxFromRight;
+        }
+        this.setDimensions({ fromRight });
+    }
+
+    private setDimensions(newDimensions: Partial<Dimensions>) {
         this.dimensions = {
             ...this.dimensions,
-            ...dim,
+            ...newDimensions,
         };
     }
 
     private setPosition() {
         this.viewport.style.left = `${this.dimensions.fromLeft}px`;
         this.viewport.style.right = `${this.dimensions.fromRight}px`;
-    }
 
-    private calculateDrag(delta: number) {
-        const sliderRect = this.slider.getBoundingClientRect();
         const viewportRect = this.viewport.getBoundingClientRect();
-        const sliderWidth = sliderRect.width;
+        const leftElRightProp = viewportRect.width + this.dimensions.fromRight;
+        const rightElLeftProp = viewportRect.width + this.dimensions.fromLeft;
 
-        let fromLeft = viewportRect.left - sliderRect.left - delta;
-        let fromRight = sliderRect.right - viewportRect.right + delta;
-        if (fromLeft < 0) {
-            fromLeft = 0;
-            fromRight = sliderWidth - viewportRect.width;
-        }
-        if (fromRight < 0) {
-            fromRight = 0;
-            fromLeft = sliderWidth - viewportRect.width;
-        }
-        this.setDimensions({ fromLeft, fromRight });
-    }
+        this.left.style.left = `0px`;
+        this.left.style.right = `${leftElRightProp}px`;
 
-    private calculateResize(delta: number) {
-        const sliderRect = this.slider.getBoundingClientRect();
-        const viewportRect = this.viewport.getBoundingClientRect();
-
-        const fromLeft = viewportRect.left - sliderRect.left - delta;
-        this.setDimensions({ fromLeft });
+        this.right.style.left = `${rightElLeftProp}px`;
+        this.right.style.right = '0px';
     }
 
     private setupCSSVars() {

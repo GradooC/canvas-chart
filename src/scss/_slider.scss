@@ -4,16 +4,22 @@
     background-color: burlywood;
 }
 
+%slider-elem {
+    position: absolute;
+    height: 100%;
+    caret-color: transparent;
+}
+
 .slider {
     position: relative;
     display: flex;
     height: 100px;
+    width: 900px;
 
     .viewport {
-        position: absolute;
+        @extend %slider-elem;
         display: flex;
         justify-content: space-between;
-        height: 100%;
         background-color: violet;
 
         &-left-edge {
@@ -25,5 +31,15 @@
             @extend %edge;
             cursor: e-resize;
         }
+    }
+
+    .left {
+        @extend %slider-elem;
+        background-color: blanchedalmond;
+    }
+
+    .right {
+        @extend %slider-elem;
+        background-color: blanchedalmond;
     }
 }
