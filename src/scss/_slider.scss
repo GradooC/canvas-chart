@@ -21,6 +21,9 @@
         display: flex;
         justify-content: space-between;
         background-color: transparent;
+        box-sizing: border-box;
+        border-top: 2px solid var(--edge-color);
+        border-bottom: 2px solid var(--edge-color);
 
         &-left-edge {
             @extend %edge;
