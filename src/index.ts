@@ -8,8 +8,6 @@ import {
     getScaledY,
     drawXSignature,
 } from './utils';
-import { ChartMap } from './chart-map';
-import { DrawChart } from './draw-chart';
 import { Chart } from './chart';
 import data from './data/chart_data.json';
 
@@ -92,5 +90,3 @@ import data from './data/chart_data.json';
 
 const box = document.querySelector('.box') as HTMLDivElement;
 new Chart(data, box);
-// new ChartMap();
-// new DrawChart(data);

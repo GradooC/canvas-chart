@@ -1,4 +1,8 @@
-type Numbers = 1 | 2 | 3 | 4 | 5;
+export type Columns = {
+    x: number[];
+    y0: number[];
+    y1: number[];
+};
 
 export type InputData = {
     columns: [string, ...number[]][];
@@ -16,5 +20,3 @@ export type InputData = {
         y1: string;
     };
 };
-
-export type Points = Record<keyof InputData['types'], number[]>;

@@ -16,9 +16,8 @@ export const EDGE_WIDTH = 5;
 export const MIN_VIEWPORT_WIDTH = 100;
 export const SIDE_ELEMENTS_COLOR = 'rgb(84, 110, 122, 0.4)';
 export const VIEWPORT_EDGE_COLOR = 'rgb(84, 110, 122, 0.8)';
-// export const SLIDER_WIDTH = 900;
-// export const SLIDER_HEIGHT = 100;
 
 //Common settings
 export const MAP_HEIGHT_PERCENT = 0.25;
-// export 
+export const DEFAULT_WIDTH = 900;
+export const DEFAULT_HEIGHT = 400;
