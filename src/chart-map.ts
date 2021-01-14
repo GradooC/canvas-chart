@@ -1,11 +1,19 @@
+import {
+    MIN_VIEWPORT_WIDTH,
+    EDGE_WIDTH,
+    SIDE_ELEMENTS_COLOR,
+    VIEWPORT_EDGE_COLOR,
+} from './constants';
 import './scss/index.scss';
-
-const EDGE_WIDTH = 4;
-const MIN_VIEWPORT_WIDTH = 100;
 
 type Dimensions = {
     fromLeft: number;
     fromRight: number;
+};
+
+type Options = {
+    width: number;
+    height: number;
 };
 
 export class ChartMap {
@@ -16,10 +24,10 @@ export class ChartMap {
     private left: HTMLDivElement;
     private right: HTMLDivElement;
     private dimensions: Dimensions = {
-        fromLeft: 100,
-        fromRight: 600,
+        fromLeft: 0,
+        fromRight: 700,
     };
-    constructor() {
+    constructor(private options: Options) {
         this.slider = document.querySelector('.slider') as HTMLDivElement;
         this.viewport = document.querySelector('.viewport') as HTMLDivElement;
         this.leftVPEdge = document.querySelector('.viewport-left-edge') as HTMLDivElement;
@@ -27,11 +35,11 @@ export class ChartMap {
         this.left = document.querySelector('.left') as HTMLDivElement;
         this.right = document.querySelector('.right') as HTMLDivElement;
 
+        this.setCSSVars();
         this.setPosition();
         this.handleDrag();
         this.handleLeftSideResize();
         this.handleRightSideResize();
-        this.setupCSSVars();
     }
 
     private handleDrag() {
@@ -152,8 +160,12 @@ export class ChartMap {
         this.right.style.right = '0px';
     }
 
-    private setupCSSVars() {
+    private setCSSVars() {
         document.documentElement.style.setProperty('--edge-width', `${EDGE_WIDTH}px`);
+        document.documentElement.style.setProperty('--slider-width', `${this.options.width}px`);
+        document.documentElement.style.setProperty('--slider-height', `${this.options.height}px`);
+        document.documentElement.style.setProperty('--side-color', SIDE_ELEMENTS_COLOR);
+        document.documentElement.style.setProperty('--edge-color', VIEWPORT_EDGE_COLOR);
     }
 
     private addEventListeners(onMousemove: (e: MouseEvent) => void) {

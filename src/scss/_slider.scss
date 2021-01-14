@@ -1,7 +1,7 @@
 %edge {
     width: var(--edge-width);
     height: 100%;
-    background-color: burlywood;
+    background-color: var(--edge-color);
 }
 
 %slider-elem {
@@ -13,14 +13,14 @@
 .slider {
     position: relative;
     display: flex;
-    height: 100px;
-    width: 900px;
+    height: var(--slider-height);
+    width: var(--slider-width);
 
     .viewport {
         @extend %slider-elem;
         display: flex;
         justify-content: space-between;
-        background-color: violet;
+        background-color: transparent;
 
         &-left-edge {
             @extend %edge;
@@ -35,11 +35,11 @@
 
     .left {
         @extend %slider-elem;
-        background-color: blanchedalmond;
+        background-color: var(--side-color);
     }
 
     .right {
         @extend %slider-elem;
-        background-color: blanchedalmond;
+        background-color: var(--side-color);
     }
 }

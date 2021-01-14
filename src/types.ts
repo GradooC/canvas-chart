@@ -1,4 +1,6 @@
-export type Data = {
+type Numbers = 1 | 2 | 3 | 4 | 5;
+
+export type InputData = {
     columns: [string, ...number[]][];
     types: {
         x: string;
@@ -15,4 +17,4 @@ export type Data = {
     };
 };
 
-export type Points = Record<keyof Data['types'], number[]>;
+export type Points = Record<keyof InputData['types'], number[]>;

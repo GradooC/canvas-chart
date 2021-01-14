@@ -3,7 +3,7 @@ type Noun = 'source' | 'destination';
 
 interface CanvasRenderingContext2D {
     globalCompositeOperation:
-        `${Noun}-${Pretext}`
+        | `${Noun}-${Pretext}`
         | 'lighter'
         | 'copy'
         | 'xor'
@@ -22,4 +22,31 @@ interface CanvasRenderingContext2D {
         | 'saturation'
         | 'color'
         | 'luminosity';
+}
+
+declare module '*.json' {
+    type InputData = {
+        columns: [string, ...number[]][];
+        types: {
+            x: string;
+            y0: string;
+            y1: string;
+        };
+        names: {
+            y0: string;
+            y1: string;
+        };
+        colors: {
+            y0: string;
+            y1: string;
+        };
+    };
+    const data: InputData;
+    export type { InputData };
+    export default data;
+}
+
+declare module '*.html' {
+    const template: string;
+    export default template;
 }
