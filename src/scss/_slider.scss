@@ -14,7 +14,7 @@
     position: relative;
     display: flex;
     height: var(--slider-height);
-    width: var(--slider-width);
+    width: var(--width);
 
     .viewport {
         @extend %slider-elem;

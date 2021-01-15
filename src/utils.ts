@@ -12,20 +12,20 @@ import {
 //     return { ...acc, [axisName]: points };
 // }, {} as Points);
 
-export const getLast = <T>(arr: T[]): T => arr[arr.length - 1];
+// export const getLast = <T>(arr: T[]): T => arr[arr.length - 1];
 
-export const getScaledX = (xCoordinates: number[], canvasWidth: number) => {
-    const lastElement = xCoordinates[xCoordinates.length - 1];
-    const firstElement = xCoordinates[0];
-    return xCoordinates.map(
-        (x) => ((x - firstElement) * canvasWidth) / (lastElement - firstElement)
-    );
-};
+// export const getScaledX = (xCoordinates: number[], canvasWidth: number) => {
+//     const lastElement = xCoordinates[xCoordinates.length - 1];
+//     const firstElement = xCoordinates[0];
+//     return xCoordinates.map(
+//         (x) => ((x - firstElement) * canvasWidth) / (lastElement - firstElement)
+//     );
+// };
 
-export const getScaledY = (yCoordinates: number[], canvasHeight: number) => {
-    const scaleFactor = canvasHeight / Math.max(...yCoordinates);
-    return yCoordinates.map((y) => canvasHeight - y * scaleFactor);
-};
+// export const getScaledY = (yCoordinates: number[], canvasHeight: number) => {
+//     const scaleFactor = canvasHeight / Math.max(...yCoordinates);
+//     return yCoordinates.map((y) => canvasHeight - y * scaleFactor);
+// };
 
 export const drawHorizontalMarkup = (
     context: CanvasRenderingContext2D,

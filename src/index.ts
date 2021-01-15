@@ -4,8 +4,6 @@ import {
     drawLine,
     createVMDrawer,
     drawCircle,
-    getScaledX,
-    getScaledY,
     drawXSignature,
 } from './utils';
 import { Chart } from './chart';

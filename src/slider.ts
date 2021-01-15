@@ -168,11 +168,12 @@ export class Slider {
     }
 
     private setCSSVars() {
-        document.documentElement.style.setProperty('--edge-width', `${EDGE_WIDTH}px`);
-        document.documentElement.style.setProperty('--slider-width', `${this.options.width}px`);
-        document.documentElement.style.setProperty('--slider-height', `${this.options.height}px`);
-        document.documentElement.style.setProperty('--side-color', SIDE_ELEMENTS_COLOR);
-        document.documentElement.style.setProperty('--edge-color', VIEWPORT_EDGE_COLOR);
+        const root = document.querySelector('.chart') as HTMLDivElement;
+        root.style.setProperty('--edge-width', `${EDGE_WIDTH}px`);
+        root.style.setProperty('--width', `${this.options.width}px`);
+        root.style.setProperty('--slider-height', `${this.options.height}px`);
+        root.style.setProperty('--side-color', SIDE_ELEMENTS_COLOR);
+        root.style.setProperty('--edge-color', VIEWPORT_EDGE_COLOR);
     }
 
     private addEventListeners(onMousemove: (e: MouseEvent) => void) {

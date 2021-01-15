@@ -4,7 +4,7 @@ export const GREEN_COLOR = '#3DC23F';
 
 export const FONT = '14px Verdana';
 
-export const ROWS_AMOUNT = 5;
+
 export const Y_MARKUP_SIGNATURE_OFFSET = 5;
 export const X_MARKUP_SIGNATURE_OFFSET = 20;
 export const HALF_PIXEL = 0.5;
@@ -18,6 +18,10 @@ export const SIDE_ELEMENTS_COLOR = 'rgb(84, 110, 122, 0.4)';
 export const VIEWPORT_EDGE_COLOR = 'rgb(84, 110, 122, 0.8)';
 
 //Common settings
-export const MAP_HEIGHT_PERCENT = 0.25;
+export const MAP_HEIGHT_PERCENT = 0.2;
 export const DEFAULT_WIDTH = 900;
 export const DEFAULT_HEIGHT = 400;
+
+// Main chart settings
+export const ROWS_AMOUNT = 5;
+export const CIRCLE_RADIUS = 8;

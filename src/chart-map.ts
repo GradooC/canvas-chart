@@ -10,11 +10,5 @@ export class ChartMap extends ChartBase {
     constructor(data: Data, options: Options) {
         const canvas = document.querySelector('#slider-map') as HTMLCanvasElement;
         super(canvas, data, options);
-
-        this.drawData()
-    }
-
-    drawData() {
-        this.draw.drawPolyline();
     }
 }

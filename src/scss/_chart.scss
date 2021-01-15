@@ -1,0 +1,11 @@
+.chart {
+    display: flex;
+    justify-content: center;
+    flex-direction: column;
+    width: var(--width);
+
+    //dev
+    & > canvas {
+        border: 1px solid black;
+    }
+}
