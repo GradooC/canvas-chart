@@ -10,6 +10,7 @@ export class Draw {
     line: Path2D = new Path2D();
     pointer: Path2D = new Path2D();
     circle: Path2D = new Path2D();
+    clearCircle: Path2D = new Path2D();
     constructor(
         private context: CanvasRenderingContext2D,
         private scaledCoords: Columns,
@@ -49,13 +50,30 @@ export class Draw {
             );
         this.circle = circle;
 
+        const clearCircle = new Path2D();
+        index !== null &&
+            clearCircle.arc(
+                this.scaledCoords.x[index],
+                this.scaledCoords.y0[index],
+                CIRCLE_RADIUS - this.context.lineWidth,
+                0,
+                2 * Math.PI
+            );
+        this.clearCircle = clearCircle;
+
         this.render();
     }
 
     render() {
         this.context.clearRect(0, 0, this.dimensions.width, this.dimensions.height);
+
         this.context.stroke(this.line);
         this.context.stroke(this.pointer);
         this.context.stroke(this.circle);
+
+        this.context.save();
+        this.context.globalCompositeOperation = 'destination-out';
+        this.context.fill(this.clearCircle);
+        this.context.restore();
     }
 }
