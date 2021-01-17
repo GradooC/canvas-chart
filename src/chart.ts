@@ -24,8 +24,8 @@ export class Chart {
         const sliderOptions = { width, height: height * MAP_HEIGHT_PERCENT };
         const mainChartOptions = { width, height: height * (1 - MAP_HEIGHT_PERCENT) };
 
-        new Slider(this.data, sliderOptions);
-        new ChartMain(this.data, mainChartOptions);
+        const mainChart = new ChartMain(this.data, mainChartOptions);
+        new Slider(this.data, mainChart, sliderOptions);
     }
 
     static transformData(data: InputData) {

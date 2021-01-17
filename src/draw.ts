@@ -55,7 +55,7 @@ export class Draw {
             clearCircle.arc(
                 this.scaledCoords.x[index],
                 this.scaledCoords.y0[index],
-                CIRCLE_RADIUS - this.context.lineWidth,
+                CIRCLE_RADIUS - this.context.lineWidth, //TODO issues are possible here
                 0,
                 2 * Math.PI
             );

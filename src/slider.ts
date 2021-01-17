@@ -7,6 +7,7 @@ import {
     VIEWPORT_EDGE_COLOR,
 } from './constants';
 import './scss/index.scss';
+import { ChartMain } from './chart-main';
 
 type Dimensions = {
     fromLeft: number;
@@ -29,7 +30,7 @@ export class Slider {
         fromLeft: 0,
         fromRight: 700,
     };
-    constructor(private data: Data, private options: Options) {
+    constructor(private data: Data, private mainChart: ChartMain, private options: Options) {
         this.slider = document.querySelector('.slider') as HTMLDivElement;
         this.viewport = document.querySelector('.viewport') as HTMLDivElement;
         this.leftVPEdge = document.querySelector('.viewport-left-edge') as HTMLDivElement;
@@ -113,6 +114,8 @@ export class Slider {
             fromLeft = sliderRect.width - viewportRect.width;
         }
         this.setDimensions({ fromLeft, fromRight });
+
+        this.calculateDataRange();
     }
 
     private calculateLeftSideResize(delta: number) {
@@ -128,6 +131,8 @@ export class Slider {
             fromLeft = maxFromLeft;
         }
         this.setDimensions({ fromLeft });
+
+        this.calculateDataRange();
     }
 
     private calculateRightSideResize(delta: number) {
@@ -143,6 +148,22 @@ export class Slider {
             fromRight = maxFromRight;
         }
         this.setDimensions({ fromRight });
+
+        this.calculateDataRange();
+    }
+
+    private calculateDataRange() {
+        const sliderRect = this.slider.getBoundingClientRect();
+        const viewportRect = this.viewport.getBoundingClientRect();
+
+        const dataOffsetPercent = Math.abs(sliderRect.left - viewportRect.left) / sliderRect.width;
+        const dataWidthPercent = viewportRect.width / sliderRect.width;
+
+        const newData = this.mainChart.scaledCoords.x.filter((_x, index, arr) => {
+            const firstIndex = Math.round(arr.length * dataOffsetPercent);
+            const lastIndex = firstIndex + Math.round(arr.length * dataWidthPercent);
+            return index > firstIndex && index < lastIndex;
+        });
     }
 
     private setDimensions(newDimensions: Partial<Dimensions>) {
