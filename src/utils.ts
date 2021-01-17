@@ -1,6 +1,6 @@
 import {
-    LIGHT_GRAY_COLOR,
-    GREEN_COLOR,
+    // LIGHT_GRAY_COLOR,
+    // GREEN_COLOR,
     Y_MARKUP_SIGNATURE_OFFSET,
     X_MARKUP_SIGNATURE_OFFSET,
     ROWS_AMOUNT,
@@ -80,67 +80,67 @@ export const drawXSignature = (
     });
 };
 
-export const drawLine = (
-    context: CanvasRenderingContext2D,
-    scaledX: number[],
-    scaledY: number[],
-    color: string = GREEN_COLOR
-) => {
-    const [firstX, ...restX] = scaledX;
-    const [firstY, ...restY] = scaledY;
-    context.beginPath();
-    context.moveTo(firstX, firstY);
-    restX.forEach((x, index) => {
-        context.lineTo(x, restY[index]);
-    });
-    context.stroke();
-};
+// export const drawLine = (
+//     context: CanvasRenderingContext2D,
+//     scaledX: number[],
+//     scaledY: number[],
+//     color: string = GREEN_COLOR
+// ) => {
+//     const [firstX, ...restX] = scaledX;
+//     const [firstY, ...restY] = scaledY;
+//     context.beginPath();
+//     context.moveTo(firstX, firstY);
+//     restX.forEach((x, index) => {
+//         context.lineTo(x, restY[index]);
+//     });
+//     context.stroke();
+// };
 
-export const createVMDrawer = (
-    context: CanvasRenderingContext2D,
-    scaledXCoordinates: number[]
-) => {
-    let currentClosestX: number = -1;
+// export const createVMDrawer = (
+//     context: CanvasRenderingContext2D,
+//     scaledXCoordinates: number[]
+// ) => {
+//     let currentClosestX: number = -1;
 
-    return (x: number) => {
-        const closestX = scaledXCoordinates.reduce((res, el) => {
-            return Math.abs(el - x) < Math.abs(res - x) ? el : res;
-        });
+//     return (x: number) => {
+//         const closestX = scaledXCoordinates.reduce((res, el) => {
+//             return Math.abs(el - x) < Math.abs(res - x) ? el : res;
+//         });
 
-        if (currentClosestX !== closestX) {
-            context.globalCompositeOperation = 'xor';
-            context.strokeStyle = LIGHT_GRAY_COLOR;
-            context.beginPath();
+//         if (currentClosestX !== closestX) {
+//             context.globalCompositeOperation = 'xor';
+//             context.strokeStyle = LIGHT_GRAY_COLOR;
+//             context.beginPath();
 
-            context.moveTo(closestX, 0);
-            context.lineTo(closestX, 700);
+//             context.moveTo(closestX, 0);
+//             context.lineTo(closestX, 700);
 
-            context.moveTo(currentClosestX, 0);
-            context.lineTo(currentClosestX, 700);
+//             context.moveTo(currentClosestX, 0);
+//             context.lineTo(currentClosestX, 700);
 
-            context.stroke();
+//             context.stroke();
 
-            currentClosestX = closestX;
-        }
-    };
-};
+//             currentClosestX = closestX;
+//         }
+//     };
+// };
 
-export const drawCircle = (
-    context: CanvasRenderingContext2D,
-    scaledX: number[],
-    scaledY: number[],
-    radius: number = 10,
-    color: string = GREEN_COLOR
-) => {
-    context.save();
-    context.globalCompositeOperation = 'destination-over';
-    scaledX.forEach((x, index) => {
-        context.beginPath();
-        context.arc(x, scaledY[index], radius, 0, Math.PI * 2);
-        context.stroke();
-    });
-    context.restore();
-};
+// export const drawCircle = (
+//     context: CanvasRenderingContext2D,
+//     scaledX: number[],
+//     scaledY: number[],
+//     radius: number = 10,
+//     color: string = GREEN_COLOR
+// ) => {
+//     context.save();
+//     context.globalCompositeOperation = 'destination-over';
+//     scaledX.forEach((x, index) => {
+//         context.beginPath();
+//         context.arc(x, scaledY[index], radius, 0, Math.PI * 2);
+//         context.stroke();
+//     });
+//     context.restore();
+// };
 
 export const drawScaled = <F extends (...args: any) => any>(
     context: CanvasRenderingContext2D,
