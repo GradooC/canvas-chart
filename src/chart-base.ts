@@ -10,16 +10,13 @@ type Options = {
 export class ChartBase {
     draw: Draw;
     scaledCoords: Columns;
-    constructor(protected canvas: HTMLCanvasElement, protected data: Data, options: Options) {
+    constructor(public canvas: HTMLCanvasElement, public data: Data, options: Options) {
         const context = canvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
         this.canvas.width = options.width;
         this.canvas.height = options.height;
 
         this.scaledCoords = this.getScaledPoints(data);
-        this.draw = new Draw(context, this.scaledCoords, {
-            width: this.canvas.width,
-            height: this.canvas.height,
-        });
+        this.draw = new Draw(context, this);
     }
 
     private getScaledX(xCoordinates: number[], canvasWidth: number) {
@@ -35,14 +32,12 @@ export class ChartBase {
         return yCoordinates.map((y) => Math.round(canvasHeight - y * scaleFactor));
     }
 
-    protected getScaledPoints(data: Data) {
+    public getScaledPoints(data: Data) {
+        const { width, height } = this.canvas;
         return Object.entries(data.columns).reduce((acc, [key, value]) => {
             return {
                 ...acc,
-                [key]:
-                    key === 'x'
-                        ? this.getScaledX(value, this.canvas.width)
-                        : this.getScaledY(value, this.canvas.height),
+                [key]: key === 'x' ? this.getScaledX(value, width) : this.getScaledY(value, height),
             };
         }, {} as Columns);
     }

@@ -8,6 +8,7 @@ import {
 } from './constants';
 import './scss/index.scss';
 import { ChartMain } from './chart-main';
+import { Columns } from './types';
 
 type Dimensions = {
     fromLeft: number;
@@ -28,7 +29,7 @@ export class Slider {
     private right: HTMLDivElement;
     private dimensions: Dimensions = {
         fromLeft: 0,
-        fromRight: 700,
+        fromRight: 0,
     };
     constructor(private data: Data, private mainChart: ChartMain, private options: Options) {
         this.slider = document.querySelector('.slider') as HTMLDivElement;
@@ -159,11 +160,25 @@ export class Slider {
         const dataOffsetPercent = Math.abs(sliderRect.left - viewportRect.left) / sliderRect.width;
         const dataWidthPercent = viewportRect.width / sliderRect.width;
 
-        const newData = this.mainChart.scaledCoords.x.filter((_x, index, arr) => {
-            const firstIndex = Math.round(arr.length * dataOffsetPercent);
-            const lastIndex = firstIndex + Math.round(arr.length * dataWidthPercent);
-            return index > firstIndex && index < lastIndex;
+        const { length } = this.mainChart.data.columns.x;
+        const firstIndex = Math.round(length * dataOffsetPercent);
+        const lastIndex = firstIndex + Math.round(length * dataWidthPercent);
+
+        //TODO optimization is needed
+        const newColumns = Object.entries(this.mainChart.data.columns).reduce(
+            (acc, [key, value]) => {
+                return {
+                    ...acc,
+                    [key]: value.filter((_x, index) => index > firstIndex && index < lastIndex),
+                };
+            },
+            {} as Columns
+        );
+        this.mainChart.scaledCoords = this.mainChart.getScaledPoints({
+            ...this.data,
+            columns: newColumns,
         });
+        this.mainChart.draw.onChangeDataSet();
     }
 
     private setDimensions(newDimensions: Partial<Dimensions>) {

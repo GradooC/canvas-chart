@@ -1,5 +1,6 @@
 import { ChartBase } from './chart-base';
 import { Data } from './chart';
+import { Columns } from './types';
 
 type Options = {
     width: number;
@@ -10,11 +11,10 @@ export class ChartMain extends ChartBase {
     constructor(data: Data, options: Options) {
         const canvas = document.querySelector('#chart-main') as HTMLCanvasElement;
         super(canvas, data, options);
-
         this.addEvents();
     }
 
-    addEvents() {
+    private addEvents() {
         let currentPointIndex: number | null = null;
         // TODO Optimization needed
         this.canvas.addEventListener('mousemove', (e) => {

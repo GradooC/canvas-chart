@@ -1,71 +1,89 @@
-import { Columns } from './types';
 import { CIRCLE_RADIUS } from './constants';
-
-type Options = {
-    width: number;
-    height: number;
-};
+import { ChartBase } from './chart-base';
 
 export class Draw {
-    line: Path2D = new Path2D();
-    pointer: Path2D = new Path2D();
-    circle: Path2D = new Path2D();
-    clearCircle: Path2D = new Path2D();
+    private line: Path2D;
+    private circle: Path2D;
+    private clearCircle: Path2D;
+    private pointer: Path2D;
     constructor(
         private context: CanvasRenderingContext2D,
-        private scaledCoords: Columns,
-        private dimensions: Options
+        private baseChart: ChartBase // private scaledCoords: Columns, // private dimensions: Options
     ) {
-        this.polyline();
+        this.line = this.drawPolyline(baseChart.scaledCoords.x);
+        this.circle = this.drawCircle(null);
+        this.clearCircle = this.drawClearCircle(null);
+        this.pointer = this.drawPointer(null);
 
         this.render();
     }
 
-    polyline() {
+    private drawPolyline(data: number[]) {
         const line = new Path2D();
-        this.scaledCoords.x.forEach((x, index) => {
-            line.lineTo(x, this.scaledCoords.y0[index]);
+        data.forEach((x, index) => {
+            line.lineTo(x, this.baseChart.scaledCoords.y0[index]);
         });
-        this.line = line;
+        return line;
     }
 
-    markUp() {}
-    ySignature() {}
-    xSignature() {}
-
-    onPoint(index: number | null) {
-        const pointer = new Path2D();
-        index !== null && pointer.moveTo(this.scaledCoords.x[index], 0);
-        index !== null && pointer.lineTo(this.scaledCoords.x[index], this.dimensions.height);
-        this.pointer = pointer;
-
+    private drawCircle(index: number | null) {
         const circle = new Path2D();
         index !== null &&
             circle.arc(
-                this.scaledCoords.x[index],
-                this.scaledCoords.y0[index],
+                this.baseChart.scaledCoords.x[index],
+                this.baseChart.scaledCoords.y0[index],
                 CIRCLE_RADIUS,
                 0,
                 2 * Math.PI
             );
-        this.circle = circle;
+        return circle;
+    }
 
+    private drawClearCircle(index: number | null) {
         const clearCircle = new Path2D();
         index !== null &&
             clearCircle.arc(
-                this.scaledCoords.x[index],
-                this.scaledCoords.y0[index],
+                this.baseChart.scaledCoords.x[index],
+                this.baseChart.scaledCoords.y0[index],
                 CIRCLE_RADIUS - this.context.lineWidth, //TODO issues are possible here
                 0,
                 2 * Math.PI
             );
-        this.clearCircle = clearCircle;
+        return clearCircle;
+    }
+
+    private drawPointer(index: number | null) {
+        const {
+            scaledCoords: { x },
+            canvas: { height },
+        } = this.baseChart;
+        const pointer = new Path2D();
+        index !== null && pointer.moveTo(x[index], 0);
+        index !== null && pointer.lineTo(x[index], height);
+        return pointer;
+    }
+
+    // markUp() {}
+    // ySignature() {}
+    // xSignature() {}
+
+    onPoint(index: number | null) {
+        this.pointer = this.drawPointer(index);
+        this.circle = this.drawCircle(index);
+        this.clearCircle = this.drawClearCircle(index);
 
         this.render();
     }
 
-    render() {
-        this.context.clearRect(0, 0, this.dimensions.width, this.dimensions.height);
+    onChangeDataSet() {
+        this.line = this.drawPolyline(this.baseChart.scaledCoords.x);
+
+        this.render();
+    }
+
+    private render() {
+        const { width, height } = this.baseChart.canvas;
+        this.context.clearRect(0, 0, width, height);
 
         this.context.stroke(this.line);
         this.context.stroke(this.pointer);
