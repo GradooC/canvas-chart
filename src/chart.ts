@@ -19,11 +19,11 @@ export class Chart {
         { width = DEFAULT_WIDTH, height = DEFAULT_HEIGHT }: Options = {}
     ) {
         this.data = Chart.transformData(data);
+
         box.insertAdjacentHTML('beforeend', template);
 
         const sliderOptions = { width, height: height * MAP_HEIGHT_PERCENT };
         const mainChartOptions = { width, height: height * (1 - MAP_HEIGHT_PERCENT) };
-
         const mainChart = new ChartMain(this.data, mainChartOptions);
         new Slider(this.data, mainChart, sliderOptions);
     }

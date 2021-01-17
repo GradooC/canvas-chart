@@ -6,10 +6,7 @@ export class Draw {
     private circle: Path2D;
     private clearCircle: Path2D;
     private pointer: Path2D;
-    constructor(
-        private context: CanvasRenderingContext2D,
-        private baseChart: ChartBase // private scaledCoords: Columns, // private dimensions: Options
-    ) {
+    constructor(private context: CanvasRenderingContext2D, private baseChart: ChartBase) {
         this.line = this.drawPolyline(baseChart.scaledCoords.x);
         this.circle = this.drawCircle(null);
         this.clearCircle = this.drawClearCircle(null);

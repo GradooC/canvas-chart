@@ -169,7 +169,7 @@ export class Slider {
             (acc, [key, value]) => {
                 return {
                     ...acc,
-                    [key]: value.filter((_x, index) => index > firstIndex && index < lastIndex),
+                    [key]: value.filter((_, index) => index >= firstIndex && index < lastIndex),
                 };
             },
             {} as Columns
