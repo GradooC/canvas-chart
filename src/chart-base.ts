@@ -11,7 +11,7 @@ export class ChartBase {
     draw: Draw;
     scaledCoords: Columns;
     constructor(protected canvas: HTMLCanvasElement, protected data: Data, options: Options) {
-        const context = canvas.getContext('2d') as CanvasRenderingContext2D;
+        const context = canvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
         this.canvas.width = options.width;
         this.canvas.height = options.height;
 
@@ -25,14 +25,14 @@ export class ChartBase {
     private getScaledX(xCoordinates: number[], canvasWidth: number) {
         const lastElement = xCoordinates[xCoordinates.length - 1];
         const firstElement = xCoordinates[0];
-        return xCoordinates.map(
-            (x) => ((x - firstElement) * canvasWidth) / (lastElement - firstElement)
+        return xCoordinates.map((x) =>
+            Math.round(((x - firstElement) * canvasWidth) / (lastElement - firstElement))
         );
     }
 
     private getScaledY(yCoordinates: number[], canvasHeight: number) {
         const scaleFactor = canvasHeight / Math.max(...yCoordinates);
-        return yCoordinates.map((y) => canvasHeight - y * scaleFactor);
+        return yCoordinates.map((y) => Math.round(canvasHeight - y * scaleFactor));
     }
 
     protected getScaledPoints(data: Data) {
