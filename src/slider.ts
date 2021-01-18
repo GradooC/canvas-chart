@@ -164,20 +164,7 @@ export class Slider {
         const firstIndex = Math.round(length * dataOffsetPercent);
         const lastIndex = firstIndex + Math.round(length * dataWidthPercent);
 
-        //TODO optimization is needed
-        const newColumns = Object.entries(this.mainChart.data.columns).reduce(
-            (acc, [key, value]) => {
-                return {
-                    ...acc,
-                    [key]: value.filter((_, index) => index >= firstIndex && index < lastIndex),
-                };
-            },
-            {} as Columns
-        );
-        this.mainChart.scaledCoords = this.mainChart.getScaledPoints({
-            ...this.data,
-            columns: newColumns,
-        });
+        this.mainChart.calculateDisplayedData(firstIndex, lastIndex);
         this.mainChart.draw.onChangeDataSet();
     }
 

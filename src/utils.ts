@@ -1,10 +1,8 @@
 import {
     // LIGHT_GRAY_COLOR,
     // GREEN_COLOR,
-    Y_MARKUP_SIGNATURE_OFFSET,
     X_MARKUP_SIGNATURE_OFFSET,
     ROWS_AMOUNT,
-    HALF_PIXEL,
 } from './constants';
 
 // const points = data.columns.reduce((acc, arr) => {
@@ -27,36 +25,39 @@ import {
 //     return yCoordinates.map((y) => canvasHeight - y * scaleFactor);
 // };
 
-export const drawHorizontalMarkup = (
-    context: CanvasRenderingContext2D,
-    yCoordinates: number[],
-    sectionsAmount: number = ROWS_AMOUNT,
-    canvasHeight: number,
-    canvasWidth: number
-) => {
-    const rowHeight = canvasHeight / sectionsAmount;
-    const yCoordinatesStep =
-        (Math.max(...yCoordinates) - Math.min(...yCoordinates)) /
-        sectionsAmount;
-    context.save();
-    context.translate(+HALF_PIXEL, +HALF_PIXEL); // fix line width
-    context.beginPath();
-    new Array(sectionsAmount + 1).fill(null).forEach((_, index) => {
-        const markupSignature = String(
-            (sectionsAmount - index) * yCoordinatesStep
-        );
-        context.fillText(
-            markupSignature,
-            Y_MARKUP_SIGNATURE_OFFSET,
-            index * rowHeight - Y_MARKUP_SIGNATURE_OFFSET
-        );
+type Entries<T> = {
+    [K in keyof T]: [K, T[K]];
+}[keyof T][];
 
-        context.moveTo(0, index * rowHeight);
-        context.lineTo(canvasWidth, index * rowHeight);
-    });
-    context.stroke();
-    context.restore();
-};
+export const entries = <T>(obj: T): Entries<T> => Object.entries(obj) as any;
+
+// export const drawHorizontalMarkup = (
+//     context: CanvasRenderingContext2D,
+//     yCoordinates: number[],
+//     sectionsAmount: number = ROWS_AMOUNT,
+//     canvasHeight: number,
+//     canvasWidth: number
+// ) => {
+//     const rowHeight = canvasHeight / sectionsAmount;
+//     const yCoordinatesStep =
+//         (Math.max(...yCoordinates) - Math.min(...yCoordinates)) / sectionsAmount;
+//     context.save();
+//     context.translate(+HALF_PIXEL, +HALF_PIXEL); // fix line width
+//     context.beginPath();
+//     new Array(sectionsAmount + 1).fill(null).forEach((_, index) => {
+//         const markupSignature = String((sectionsAmount - index) * yCoordinatesStep);
+//         context.fillText(
+//             markupSignature,
+//             Y_MARKUP_SIGNATURE_OFFSET,
+//             index * rowHeight - Y_MARKUP_SIGNATURE_OFFSET
+//         );
+
+//         context.moveTo(0, index * rowHeight);
+//         context.lineTo(canvasWidth, index * rowHeight);
+//     });
+//     context.stroke();
+//     context.restore();
+// };
 
 export const drawXSignature = (
     context: CanvasRenderingContext2D,
@@ -67,8 +68,7 @@ export const drawXSignature = (
 ) => {
     const segmentWidth = canvasWidth / sectionsAmount;
     const xCoordinatesStep =
-        (Math.max(...xCoordinates) - Math.min(...xCoordinates)) /
-        sectionsAmount;
+        (Math.max(...xCoordinates) - Math.min(...xCoordinates)) / sectionsAmount;
 
     new Array(sectionsAmount + 1).fill(null).forEach((_, index) => {
         const markupSignature = String(index * xCoordinatesStep);
@@ -142,14 +142,14 @@ export const drawXSignature = (
 //     context.restore();
 // };
 
-export const drawScaled = <F extends (...args: any) => any>(
-    context: CanvasRenderingContext2D,
-    fn: F,
-    ...fnArgs: Parameters<F>
-) => {
-    context.save();
-    context.scale(0.9, 0.9);
-    context.translate(60, 20);
-    fn(...fnArgs);
-    context.restore();
-};
+// export const drawScaled = <F extends (...args: any) => any>(
+//     context: CanvasRenderingContext2D,
+//     fn: F,
+//     ...fnArgs: Parameters<F>
+// ) => {
+//     context.save();
+//     context.scale(0.9, 0.9);
+//     context.translate(60, 20);
+//     fn(...fnArgs);
+//     context.restore();
+// };
