@@ -8,10 +8,14 @@ type Options = {
 };
 
 export class ChartBase {
-    draw: Draw;
-    scaledCoords: Columns;
-    private pixelRatio: number;
-    constructor(public canvas: HTMLCanvasElement, public data: Data, { width, height }: Options) {
+    readonly draw: Draw;
+    scaledCoords: Data;
+    readonly pixelRatio: number;
+    constructor(
+        readonly canvas: HTMLCanvasElement,
+        readonly data: Data,
+        { width, height }: Options
+    ) {
         const context = canvas.getContext('2d', { alpha: false }) as CanvasRenderingContext2D;
         this.canvas.style.width = `${width}px`;
         this.canvas.style.height = `${height}px`;
@@ -21,6 +25,7 @@ export class ChartBase {
         context.scale(this.pixelRatio, this.pixelRatio);
 
         this.scaledCoords = this.getScaledPoints(data);
+
         this.draw = new Draw(context, this);
     }
 
@@ -37,9 +42,9 @@ export class ChartBase {
         return yCoordinates.map((y) => Math.round(canvasHeight - y * scaleFactor));
     }
 
-    public getScaledPoints(data: Data) {
+    getScaledPoints(data: Data): Data {
         const { width, height } = this.canvas;
-        return Object.entries(data.columns).reduce((acc, [key, value]) => {
+        const newColumns = Object.entries(data.columns).reduce((acc, [key, value]) => {
             return {
                 ...acc,
                 [key]:
@@ -48,5 +53,6 @@ export class ChartBase {
                         : this.getScaledY(value, height / this.pixelRatio),
             };
         }, {} as Columns);
+        return { ...data, columns: newColumns };
     }
 }

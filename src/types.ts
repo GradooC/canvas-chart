@@ -1,3 +1,6 @@
+export { ChartBase } from './chart-base';
+export { ChartMain } from './chart-main';
+
 export type Columns = {
     x: number[];
     y0: number[];
@@ -5,7 +8,7 @@ export type Columns = {
 };
 
 export type InputData = {
-    columns: [string, ...number[]][];
+    columns: [keyof InputData['types'], ...number[]][];
     types: {
         x: string;
         y0: string;

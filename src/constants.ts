@@ -1,5 +1,5 @@
 // export const GRAY_COLOR = '#828282';
-// export const LIGHT_GRAY_COLOR = '#DCDCDC';
+
 // export const GREEN_COLOR = '#3DC23F';
 
 export const FONT = '14px Verdana';
@@ -24,3 +24,5 @@ export const DEFAULT_HEIGHT = 400;
 // Main chart settings
 export const ROWS_AMOUNT = 5;
 export const CIRCLE_RADIUS = 8;
+export const LIGHT_GRAY_COLOR = '#DCDCDC';
+export const CHART_LINE_WIDTH = 2;

@@ -1,94 +1,194 @@
-import { CIRCLE_RADIUS } from './constants';
+import { CIRCLE_RADIUS, LIGHT_GRAY_COLOR, CHART_LINE_WIDTH } from './constants';
 import { ChartBase } from './chart-base';
+import { Data } from './chart';
+import { Columns } from './types';
+
+type Shape = {
+    path: Path2D;
+    width?: number;
+    color?: string;
+    mode?: 'fill' | 'stroke';
+    globalCompositeOperation?: CanvasRenderingContext2D['globalCompositeOperation'];
+};
 
 export class Draw {
-    private line: Path2D;
-    private circle: Path2D;
-    private clearCircle: Path2D;
-    private pointer: Path2D;
+    private lines: Shape[];
+    private circles: Shape[];
+    private pointer: Shape;
+    private clearCircles: Shape[];
+    private murkUp: Shape;
     constructor(private context: CanvasRenderingContext2D, private baseChart: ChartBase) {
-        this.line = this.drawPolyline(baseChart.scaledCoords.x);
-        this.circle = this.drawCircle(null);
-        this.clearCircle = this.drawClearCircle(null);
-        this.pointer = this.drawPointer(null);
+        this.lines = this.buildPolyline(baseChart.scaledCoords);
+        this.circles = this.buildCircle(null);
+        this.clearCircles = this.buildClearCircle(null);
+        this.pointer = this.buildPointer(null);
+        this.murkUp = this.buildMarkUp();
 
         this.render();
     }
 
-    private drawPolyline(data: number[]) {
-        const line = new Path2D();
-        data.forEach((x, index) => {
-            line.lineTo(x, this.baseChart.scaledCoords.y0[index]);
-        });
-        return line;
+    private buildPolyline(data: Data): Shape[] {
+        return Object.entries(data.columns)
+            .filter(([key]) => key !== 'x')
+            .map(([key, value]) => {
+                const line = new Path2D();
+                value.forEach((y, index) => {
+                    line.lineTo(data.columns.x[index], y);
+                });
+                return {
+                    path: line,
+                    width: CHART_LINE_WIDTH,
+                    color: data.colors[key as keyof Data['names']],
+                };
+            });
     }
 
-    private drawCircle(index: number | null) {
-        const circle = new Path2D();
-        index !== null &&
-            circle.arc(
-                this.baseChart.scaledCoords.x[index],
-                this.baseChart.scaledCoords.y0[index],
-                CIRCLE_RADIUS,
-                0,
-                2 * Math.PI
-            );
-        return circle;
+    private buildCircle(index: number | null): Shape[] {
+        const { scaledCoords } = this.baseChart;
+        return Object.entries(scaledCoords.columns)
+            .filter(([key]) => key !== 'x')
+            .map(([key, value]) => {
+                const circle = new Path2D();
+                index !== null &&
+                    circle.arc(
+                        scaledCoords.columns.x[index],
+                        value[index],
+                        CIRCLE_RADIUS,
+                        0,
+                        2 * Math.PI
+                    );
+                return {
+                    path: circle,
+                    width: CHART_LINE_WIDTH,
+                    color: scaledCoords.colors[key as keyof Data['names']],
+                };
+            });
     }
 
-    private drawClearCircle(index: number | null) {
-        const clearCircle = new Path2D();
-        index !== null &&
-            clearCircle.arc(
-                this.baseChart.scaledCoords.x[index],
-                this.baseChart.scaledCoords.y0[index],
-                CIRCLE_RADIUS - this.context.lineWidth, //TODO issues are possible here
-                0,
-                2 * Math.PI
-            );
-        return clearCircle;
+    private buildClearCircle(index: number | null): Shape[] {
+        const { scaledCoords } = this.baseChart;
+        return Object.entries(scaledCoords.columns)
+            .filter(([key]) => key !== 'x')
+            .map(([_key, value]) => {
+                const clearCircle = new Path2D();
+                index !== null &&
+                    clearCircle.arc(
+                        scaledCoords.columns.x[index],
+                        value[index],
+                        CIRCLE_RADIUS - this.context.lineWidth, //TODO issues are possible here
+                        0,
+                        2 * Math.PI
+                    );
+                return {
+                    path: clearCircle,
+                    mode: 'fill',
+                    globalCompositeOperation: 'destination-out',
+                };
+            });
     }
 
-    private drawPointer(index: number | null) {
+    private buildPointer(index: number | null): Shape {
         const {
-            scaledCoords: { x },
+            scaledCoords: {
+                columns: { x },
+            },
             canvas: { height },
         } = this.baseChart;
         const pointer = new Path2D();
         index !== null && pointer.moveTo(x[index], 0);
         index !== null && pointer.lineTo(x[index], height);
-        return pointer;
+        return { path: pointer };
     }
 
-    // markUp() {}
+    private buildMarkUp(): Shape {
+        const {
+            canvas: { width, height },
+            pixelRatio,
+        } = this.baseChart;
+        const sectionsAmount = 5;
+        const canvasWidth = width / pixelRatio;
+        const canvasHeight = height / pixelRatio;
+
+        const markUp = new Path2D();
+        const rowHeight = canvasHeight / sectionsAmount;
+        new Array(sectionsAmount + 1).fill(null).forEach((_, index) => {
+            // const markupSignature = String(
+            //     (sectionsAmount - index) * yCoordinatesStep
+            // );
+            // context.fillText(
+            //     markupSignature,
+            //     Y_MARKUP_SIGNATURE_OFFSET,
+            //     index * rowHeight - Y_MARKUP_SIGNATURE_OFFSET
+            // );
+
+            markUp.moveTo(0, index * rowHeight);
+            markUp.lineTo(canvasWidth, index * rowHeight);
+        });
+        return { path: markUp };
+    }
     // ySignature() {}
     // xSignature() {}
 
     onPoint(index: number | null) {
-        this.pointer = this.drawPointer(index);
-        this.circle = this.drawCircle(index);
-        this.clearCircle = this.drawClearCircle(index);
+        this.pointer = this.buildPointer(index);
+        this.circles = this.buildCircle(index);
+        this.clearCircles = this.buildClearCircle(index);
 
         this.render();
     }
 
     onChangeDataSet() {
-        this.line = this.drawPolyline(this.baseChart.scaledCoords.x);
+        const { scaledCoords } = this.baseChart;
+        this.lines = this.buildPolyline(scaledCoords);
 
         this.render();
     }
 
+    private drawer({
+        path,
+        width = 1,
+        color = LIGHT_GRAY_COLOR,
+        mode = 'stroke',
+        globalCompositeOperation = 'source-over',
+    }: Shape) {
+        const { context } = this;
+        context.save();
+        context.globalCompositeOperation = globalCompositeOperation;
+        switch (mode) {
+            case 'fill':
+                context.fillStyle = color;
+                context.fill(path);
+                break;
+            default:
+                context.lineWidth = width;
+                context.strokeStyle = color;
+                context.stroke(path);
+                break;
+        }
+        context.restore();
+    }
+
     private render() {
-        const { width, height } = this.baseChart.canvas;
-        this.context.clearRect(0, 0, width, height);
+        const {
+            canvas: { width, height },
+            scaledCoords,
+        } = this.baseChart;
+        const { context, pointer, lines, circles, clearCircles, murkUp } = this;
+        context.clearRect(0, 0, width, height);
 
-        this.context.stroke(this.line);
-        this.context.stroke(this.pointer);
-        this.context.stroke(this.circle);
-
-        this.context.save();
-        this.context.globalCompositeOperation = 'destination-out';
-        this.context.fill(this.clearCircle);
-        this.context.restore();
+        if (height > 300) {
+            //TODO a hack to define if it's a main chart
+            this.drawer(murkUp);
+        }
+        this.drawer(pointer);
+        lines.forEach((line) => {
+            this.drawer(line);
+        });
+        clearCircles.forEach((clearCircle) => {
+            this.drawer(clearCircle);
+        });
+        circles.forEach((circle) => {
+            this.drawer(circle);
+        });
     }
 }

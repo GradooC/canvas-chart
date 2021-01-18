@@ -1,6 +1,5 @@
 import { ChartBase } from './chart-base';
 import { Data } from './chart';
-import { Columns } from './types';
 
 type Options = {
     width: number;
@@ -18,7 +17,7 @@ export class ChartMain extends ChartBase {
         let currentPointIndex: number | null = null;
         // TODO Optimization needed
         this.canvas.addEventListener('mousemove', (e) => {
-            const closestPointIndex = this.scaledCoords.x.reduce((res, el, index, arr) => {
+            const closestPointIndex = this.scaledCoords.columns.x.reduce((res, el, index, arr) => {
                 return Math.abs(el - e.offsetX) < Math.abs(arr[res] - e.offsetX) ? index : res;
             }, 0);
             if (closestPointIndex !== currentPointIndex) {
