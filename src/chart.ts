@@ -1,8 +1,8 @@
 import { Slider } from './slider';
 import { MAP_HEIGHT_PERCENT, DEFAULT_WIDTH, DEFAULT_HEIGHT } from './constants';
 import template from './templates/chart-template.html';
-import { InputData, Columns } from './types';
 import { ChartMain } from './chart-main';
+import { InputData, Columns } from "./data/chart_data.json";
 
 export type Data = ReturnType<typeof Chart.transformData>;
 

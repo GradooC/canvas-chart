@@ -8,7 +8,7 @@ import {
 } from './constants';
 import './scss/index.scss';
 import { ChartMain } from './chart-main';
-import { Columns } from './types';
+import { Columns } from "./data/chart_data.json";
 
 type Dimensions = {
     fromLeft: number;

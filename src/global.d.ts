@@ -25,6 +25,11 @@ interface CanvasRenderingContext2D {
 }
 
 declare module '*.json' {
+    type Columns = {
+        x: number[];
+        y0: number[];
+        y1: number[];
+    };
     type InputData = {
         columns: [string, ...number[]][];
         types: {
@@ -42,7 +47,7 @@ declare module '*.json' {
         };
     };
     const data: InputData;
-    export type { InputData };
+    export type { InputData, Columns };
     export default data;
 }
 
