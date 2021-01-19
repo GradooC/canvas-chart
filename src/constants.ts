@@ -1,7 +1,7 @@
 // Slider settings
 export const EDGE_WIDTH = 5;
 export const MIN_VIEWPORT_WIDTH = 100;
-export const SIDE_ELEMENTS_COLOR = 'rgb(84, 110, 122, 0.4)';
+export const SIDE_ELEMENTS_COLOR = 'rgb(240,248,255, 0.7)';
 export const VIEWPORT_EDGE_COLOR = 'rgb(84, 110, 122, 0.8)';
 
 //Common settings
