@@ -1,9 +1,11 @@
-import {
+// import {
     // LIGHT_GRAY_COLOR,
     // GREEN_COLOR,
-    X_MARKUP_SIGNATURE_OFFSET,
-    ROWS_AMOUNT,
-} from './constants';
+    // X_MARKUP_SIGNATURE_OFFSET,
+// } from './constants';
+
+import { ChartMain } from "./chart-main";
+import { ChartMap } from "./chart-map";
 
 // const points = data.columns.reduce((acc, arr) => {
 //     const [axisName, ...points] = arr;
@@ -30,6 +32,8 @@ type Entries<T> = {
 }[keyof T][];
 
 export const entries = <T>(obj: T): Entries<T> => Object.entries(obj) as any;
+
+export const isMainChart = (obj: ChartMain | ChartMap) => obj instanceof ChartMain
 
 // export const drawHorizontalMarkup = (
 //     context: CanvasRenderingContext2D,
@@ -59,26 +63,26 @@ export const entries = <T>(obj: T): Entries<T> => Object.entries(obj) as any;
 //     context.restore();
 // };
 
-export const drawXSignature = (
-    context: CanvasRenderingContext2D,
-    xCoordinates: number[],
-    sectionsAmount: number = ROWS_AMOUNT,
-    canvasHeight: number,
-    canvasWidth: number
-) => {
-    const segmentWidth = canvasWidth / sectionsAmount;
-    const xCoordinatesStep =
-        (Math.max(...xCoordinates) - Math.min(...xCoordinates)) / sectionsAmount;
+// export const drawXSignature = (
+//     context: CanvasRenderingContext2D,
+//     xCoordinates: number[],
+//     sectionsAmount: number = 5,
+//     canvasHeight: number,
+//     canvasWidth: number
+// ) => {
+//     const segmentWidth = canvasWidth / sectionsAmount;
+//     const xCoordinatesStep =
+//         (Math.max(...xCoordinates) - Math.min(...xCoordinates)) / sectionsAmount;
 
-    new Array(sectionsAmount + 1).fill(null).forEach((_, index) => {
-        const markupSignature = String(index * xCoordinatesStep);
-        context.fillText(
-            markupSignature,
-            index * segmentWidth,
-            canvasHeight + X_MARKUP_SIGNATURE_OFFSET
-        );
-    });
-};
+//     new Array(sectionsAmount + 1).fill(null).forEach((_, index) => {
+//         const markupSignature = String(index * xCoordinatesStep);
+//         context.fillText(
+//             markupSignature,
+//             index * segmentWidth,
+//             canvasHeight + X_MARKUP_SIGNATURE_OFFSET
+//         );
+//     });
+// };
 
 // export const drawLine = (
 //     context: CanvasRenderingContext2D,

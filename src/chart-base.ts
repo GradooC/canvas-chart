@@ -1,5 +1,5 @@
 import { Data } from './chart';
-import { Columns } from "./data/chart_data.json";
+import { Columns } from './data/chart_data.json';
 import { Draw } from './draw';
 
 type Options = {
@@ -9,8 +9,10 @@ type Options = {
 
 export class ChartBase {
     readonly draw: Draw;
-    scaledCoords: Data;
     readonly pixelRatio: number;
+    scaledCoords: Data;
+    minY: number;
+    maxY: number;
     constructor(
         readonly canvas: HTMLCanvasElement,
         readonly data: Data,
@@ -24,7 +26,9 @@ export class ChartBase {
         canvas.height = Math.floor(height * this.pixelRatio);
         context.scale(this.pixelRatio, this.pixelRatio);
 
-        const maxY = this.getMaxY(data.columns);
+        const [minY, maxY] = this.getMinMaxY(data.columns);
+        this.minY = minY;
+        this.maxY = maxY;
         this.scaledCoords = this.getScaledPoints(data, maxY);
 
         this.draw = new Draw(context, this);
@@ -43,11 +47,16 @@ export class ChartBase {
         return yCoordinates.map((y) => Math.round(canvasHeight - y * scaleFactor));
     }
 
-    private getMaxY(columns: Columns) {
+    private getMinMaxY(columns: Columns): [number, number] {
         const unitedYArr = Object.entries(columns)
             .filter(([key]) => key !== 'x')
             .reduce((acc, [_key, value]) => [...acc, ...value], [] as number[]);
-        return Math.max(...unitedYArr);
+        return [Math.min(...unitedYArr), Math.max(...unitedYArr)];
+    }
+
+    private setMinMaxY(minY: number, maxY: number) {
+        this.minY = minY;
+        this.maxY = maxY;
     }
 
     calculateDisplayedData(firstIndex: number, lastIndex: number) {
@@ -60,7 +69,8 @@ export class ChartBase {
             };
         }, {} as Columns);
 
-        const maxY = this.getMaxY(newColumns);
+        const [minY, maxY] = this.getMinMaxY(newColumns);
+        this.setMinMaxY(minY, maxY);
 
         this.scaledCoords = this.getScaledPoints({ ...this.data, columns: newColumns }, maxY);
     }

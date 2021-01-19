@@ -1,14 +1,27 @@
-import { CIRCLE_RADIUS, LIGHT_GRAY_COLOR, CHART_LINE_WIDTH } from './constants';
+import {
+    CIRCLE_RADIUS,
+    LIGHT_GRAY_COLOR,
+    CHART_LINE_WIDTH,
+    Y_SIGNATURE_OFFSET,
+    SECTIONS_AMOUNT,
+    FONT,
+    FONT_COLOR,
+} from './constants';
 import { ChartBase } from './chart-base';
 import { Data } from './chart';
-import { Columns } from './types';
+
+type Signature = {
+    position: { x: number; y: number };
+    signature: string;
+};
 
 type Shape = {
     path: Path2D;
     width?: number;
     color?: string;
-    mode?: 'fill' | 'stroke';
+    mode?: 'fill' | 'stroke' | 'text';
     globalCompositeOperation?: CanvasRenderingContext2D['globalCompositeOperation'];
+    signatures?: Signature[];
 };
 
 export class Draw {
@@ -105,28 +118,43 @@ export class Draw {
             canvas: { width, height },
             pixelRatio,
         } = this.baseChart;
-        const sectionsAmount = 5;
+        const sectionsAmount = SECTIONS_AMOUNT;
         const canvasWidth = width / pixelRatio;
         const canvasHeight = height / pixelRatio;
 
         const markUp = new Path2D();
         const rowHeight = canvasHeight / sectionsAmount;
         new Array(sectionsAmount + 1).fill(null).forEach((_, index) => {
-            // const markupSignature = String(
-            //     (sectionsAmount - index) * yCoordinatesStep
-            // );
-            // context.fillText(
-            //     markupSignature,
-            //     Y_MARKUP_SIGNATURE_OFFSET,
-            //     index * rowHeight - Y_MARKUP_SIGNATURE_OFFSET
-            // );
-
             markUp.moveTo(0, index * rowHeight);
             markUp.lineTo(canvasWidth, index * rowHeight);
         });
         return { path: markUp };
     }
-    // ySignature() {}
+
+    private getYSignature(): Shape {
+        const {
+            minY,
+            maxY,
+            pixelRatio,
+            canvas: { height },
+        } = this.baseChart;
+        const sectionsAmount = SECTIONS_AMOUNT;
+        const rowHeight = height / pixelRatio / sectionsAmount;
+        const step = (maxY - minY) / sectionsAmount;
+
+        const signatures = Array(sectionsAmount + 1)
+            .fill(null)
+            .reduce((acc, _el, index) => {
+                const markupSignature = String(Math.round((sectionsAmount - index) * step));
+                const position = {
+                    x: Y_SIGNATURE_OFFSET,
+                    y: index * rowHeight - Y_SIGNATURE_OFFSET,
+                };
+                return [...acc, { signature: markupSignature, position }];
+            }, [] as Signature[]);
+
+        return { path: new Path2D(), signatures, mode: 'text', color: FONT_COLOR };
+    }
     // xSignature() {}
 
     onPoint(index: number | null) {
@@ -150,6 +178,7 @@ export class Draw {
         color = LIGHT_GRAY_COLOR,
         mode = 'stroke',
         globalCompositeOperation = 'source-over',
+        signatures,
     }: Shape) {
         const { context } = this;
         context.save();
@@ -159,6 +188,12 @@ export class Draw {
                 context.fillStyle = color;
                 context.fill(path);
                 break;
+            case 'text':
+                context.fillStyle = color;
+                context.font = FONT;
+                signatures?.forEach(({ position, signature }) => {
+                    context.fillText(signature, position.x, position.y);
+                });
             default:
                 context.lineWidth = width;
                 context.strokeStyle = color;
@@ -179,6 +214,7 @@ export class Draw {
         if (height > 300) {
             //TODO a hack to define if it's a main chart
             this.drawer(murkUp);
+            this.drawer(this.getYSignature());
         }
         this.drawer(pointer);
         lines.forEach((line) => {
