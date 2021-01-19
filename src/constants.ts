@@ -1,15 +1,3 @@
-// export const GRAY_COLOR = '#828282';
-
-// export const GREEN_COLOR = '#3DC23F';
-
-
-
-// export const Y_MARKUP_SIGNATURE_OFFSET = 5;
-// export const X_MARKUP_SIGNATURE_OFFSET = 20;
-// export const HALF_PIXEL = 0.5;
-
-// export const SCALE_RATE = 0.8;
-
 // Slider settings
 export const EDGE_WIDTH = 5;
 export const MIN_VIEWPORT_WIDTH = 100;
