@@ -26,9 +26,9 @@ export class Tooltip {
     onMove(e: MouseEvent): void {
         const viewportWidth = window.visualViewport.width;
         const currentXOffset =
-        e.pageX + TOOLTIP_OFFSET_X + TOOLTIP_WIDTH < viewportWidth
-        ? TOOLTIP_OFFSET_X
-        : ALT_TOOLTIP_OFFSET_X;
+            e.pageX + TOOLTIP_OFFSET_X + TOOLTIP_WIDTH < viewportWidth
+                ? TOOLTIP_OFFSET_X
+                : ALT_TOOLTIP_OFFSET_X;
         this.tooltip.style.display = 'block';
         this.tooltip.style.left = `${e.offsetX + currentXOffset}px`;
         this.tooltip.style.top = `${e.offsetY + TOOLTIP_OFFSET_Y}px`;
