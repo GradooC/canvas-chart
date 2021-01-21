@@ -23,7 +23,7 @@ export class Tooltip {
         this.setCSSVars();
     }
 
-    onMove(e: MouseEvent) {
+    onMove(e: MouseEvent): void {
         const viewportWidth = window.visualViewport.width;
         const currentXOffset =
         e.pageX + TOOLTIP_OFFSET_X + TOOLTIP_WIDTH < viewportWidth
@@ -34,7 +34,7 @@ export class Tooltip {
         this.tooltip.style.top = `${e.offsetY + TOOLTIP_OFFSET_Y}px`;
     }
 
-    onPointChange(index: number) {
+    onPointChange(index: number): void {
         const { data } = this;
         const date = new Date(data.columns.x[index]);
         const options = { weekday: 'short', year: 'numeric', month: 'short', day: 'numeric' };
@@ -64,7 +64,7 @@ export class Tooltip {
         this.list.innerHTML = rowsHtml.join('');
     }
 
-    onLeave() {
+    onLeave(): void {
         this.tooltip.style.display = 'none';
     }
 

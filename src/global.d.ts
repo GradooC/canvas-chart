@@ -25,7 +25,6 @@ interface CanvasRenderingContext2D {
 }
 
 declare module '*.json' {
-
     type InputData = {
         columns: [string, ...number[]][];
         types: {

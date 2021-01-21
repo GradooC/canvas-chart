@@ -49,7 +49,7 @@ export class ChartBase {
     private getMinMaxY(columns: Columns): [number, number] {
         const unitedYArr = Object.entries(columns)
             .filter(([key]) => key !== 'x')
-            .reduce((acc, [_key, value]) => [...acc, ...value], [] as number[]);
+            .reduce((acc, [, value]) => [...acc, ...value], [] as number[]);
         return [Math.min(...unitedYArr), Math.max(...unitedYArr)];
     }
 
@@ -58,7 +58,7 @@ export class ChartBase {
         this.maxY = maxY;
     }
 
-    calculateDisplayedData(firstIndex: number, lastIndex: number) {
+    calculateDisplayedData(firstIndex: number, lastIndex: number): void {
         //TODO optimization is needed
         const filterer = (_: number, index: number) => index >= firstIndex && index < lastIndex;
         const newColumns = Object.entries(this.data.columns).reduce((acc, [key, value]) => {

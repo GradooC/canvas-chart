@@ -3,7 +3,6 @@ import { MAP_HEIGHT_PERCENT, DEFAULT_WIDTH, DEFAULT_HEIGHT } from './constants';
 import template from './templates/chart-template.html';
 import { ChartMain } from './chart-main';
 import { InputData } from './data/chart_data.json';
-import { Checkboxes } from './checkboxes';
 import { Columns, Data } from './types';
 
 type Options = {

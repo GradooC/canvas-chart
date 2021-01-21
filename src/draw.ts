@@ -82,7 +82,7 @@ export class Draw {
         const { scaledCoords } = this.baseChart;
         return Object.entries(scaledCoords.columns)
             .filter(([key]) => key !== 'x')
-            .map(([_key, value]) => {
+            .map(([, value]) => {
                 const clearCircle = new Path2D();
                 index !== null &&
                     clearCircle.arc(
@@ -157,7 +157,7 @@ export class Draw {
     }
     // xSignature() {}
 
-    onPoint(index: number | null) {
+    onPoint(index: number | null): void {
         this.pointer = this.buildPointer(index);
         this.circles = this.buildCircle(index);
         this.clearCircles = this.buildClearCircle(index);
@@ -165,7 +165,7 @@ export class Draw {
         this.render();
     }
 
-    onChangeDataSet() {
+    onChangeDataSet(): void {
         const { scaledCoords } = this.baseChart;
         this.lines = this.buildPolyline(scaledCoords);
 
@@ -194,6 +194,7 @@ export class Draw {
                 signatures?.forEach(({ position, signature }) => {
                     context.fillText(signature, position.x, position.y);
                 });
+                break;
             default:
                 context.lineWidth = width;
                 context.strokeStyle = color;
@@ -206,7 +207,6 @@ export class Draw {
     private render() {
         const {
             canvas: { width, height },
-            scaledCoords,
         } = this.baseChart;
         const { context, pointer, lines, circles, clearCircles, murkUp } = this;
         context.clearRect(0, 0, width, height);

@@ -6,7 +6,7 @@ type Checkbox = {
     name: string;
     color: string;
 };
-type Dataset = keyof Data['names'] | undefined;
+// type Dataset = keyof Data['names'] | undefined;
 
 export class Checkboxes {
     checkboxes: HTMLDivElement;
@@ -17,19 +17,19 @@ export class Checkboxes {
         this.addEvent();
     }
 
-    addEvent() {
+    addEvent(): void {
         this.checkboxes.addEventListener('click', (e) => {
             e.preventDefault();
             const input = (e.target as HTMLDivElement).firstChild as HTMLInputElement;
             // if (Object.values(this.mainChart.scaledCoords.display).filter((val) => val).length > 1) {
                 input.checked = !input.checked;
-                const clickedName = (e.target as HTMLDivElement).dataset.name as Dataset;
+                // const clickedName = (e.target as HTMLDivElement).dataset.name as Dataset;
                 // clickedName && this.mainChart.onCheckboxClick(clickedName);
             // }
         });
     }
 
-    buildCheckboxes() {
+    buildCheckboxes(): void {
         const { data } = this;
         const checkboxSettings = Object.keys(data.names).reduce(
             (acc, key) => [
