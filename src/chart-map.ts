@@ -1,4 +1,4 @@
-import { Data } from './chart';
+import { Data } from './types';
 import { ChartBase } from './chart-base';
 
 type Options = {

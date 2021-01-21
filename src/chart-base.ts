@@ -1,5 +1,4 @@
-import { Data } from './chart';
-import { Columns } from './data/chart_data.json';
+import { Data, Columns } from './types';
 import { Draw } from './draw';
 
 type Options = {

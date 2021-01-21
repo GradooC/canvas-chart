@@ -8,7 +8,7 @@ import {
     FONT_COLOR,
 } from './constants';
 import { ChartBase } from './chart-base';
-import { Data } from './chart';
+import { Data } from './types';
 
 type Signature = {
     position: { x: number; y: number };

@@ -1,5 +1,5 @@
 import { ChartBase } from './chart-base';
-import { Data } from './chart';
+import { Data } from './types';
 import { Tooltip } from './tooltip';
 
 type Options = {

@@ -1,4 +1,4 @@
-import { Data } from './chart';
+import { Data } from './types';
 import {
     TOOLTIP_OFFSET_X,
     TOOLTIP_OFFSET_Y,

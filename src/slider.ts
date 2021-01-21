@@ -1,5 +1,5 @@
 import { ChartMap } from './chart-map';
-import { Data } from './chart';
+import { Data } from './types';
 import {
     MIN_VIEWPORT_WIDTH,
     EDGE_WIDTH,
@@ -8,7 +8,6 @@ import {
 } from './constants';
 import './scss/index.scss';
 import { ChartMain } from './chart-main';
-import { Columns } from "./data/chart_data.json";
 
 type Dimensions = {
     fromLeft: number;
