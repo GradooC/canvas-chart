@@ -26,7 +26,7 @@ export class Chart {
         const mainChartOptions = { width, height: height * (1 - MAP_HEIGHT_PERCENT) };
         const mainChart = new ChartMain(this.data, mainChartOptions);
         new Slider(this.data, mainChart, sliderOptions);
-        new Checkboxes(this.data, mainChart);
+        // new Checkboxes(this.data, mainChart);
     }
 
     private transformData(data: InputData) {
